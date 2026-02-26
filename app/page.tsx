@@ -1,21 +1,54 @@
 import Link from "next/link";
 import { getAllArticles, getTopics } from "@/lib/content";
+import { getResearchPosts } from "@/lib/research";
 
 export default function Home() {
   const articles = getAllArticles();
   const topics = getTopics();
   const todaysReading = articles[0];
+  const researchPosts = getResearchPosts().slice(0, 4);
 
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-900">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10 md:px-10">
-        <header className="space-y-2">
+        <header className="space-y-3">
           <p className="text-sm font-medium text-zinc-500">reading-material</p>
-          <h1 className="text-3xl font-semibold tracking-tight">Bob’s Reading Hub</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Bob’s Reading + Research Hub</h1>
           <p className="max-w-2xl text-zinc-600">
-            A clean place to collect high-signal articles and notes.
+            One site for curated reading and daily research updates.
           </p>
+          <nav className="flex gap-2 text-sm">
+            <Link href="/research" className="rounded-full border border-zinc-300 px-3 py-1 hover:bg-zinc-100">
+              Research Updates
+            </Link>
+            <Link href="/topics/ai-workflows" className="rounded-full border border-zinc-300 px-3 py-1 hover:bg-zinc-100">
+              Reading Library
+            </Link>
+          </nav>
         </header>
+
+        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-medium text-zinc-500">Latest research updates</p>
+            <Link href="/research" className="text-sm text-zinc-600 hover:text-zinc-900">
+              View all →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {researchPosts.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/research/${post.slug}`}
+                className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2 hover:bg-zinc-100"
+              >
+                <p className="font-medium">{post.title}</p>
+                <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600">
+                  {post.kind === "ai" ? "AI" : "Polymarket"}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {todaysReading && (
           <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
